@@ -1,0 +1,8 @@
+# 忽略所有 .log 文件
+*.log
+
+# 忽略整个 node_modules 目录
+node_modules/
+
+# 但保留 important.log
+!important.log

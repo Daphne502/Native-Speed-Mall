@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="2026年货节 - 新春特惠，年货大促，优惠不停">
+    <meta name="theme-color" content="#C41E3A">
+    <title>年货节 - 新春特惠大促</title>
+    <link rel="icon" href="./assets/images/icon.avif" type="image/avif" class="icon" sizes="32x32">
+    <!-- JavaScript -->
+    <script type="module" src="./assets/js/app.js" defer></script>
+    <!-- 把首屏必须的css写在<style>里，其他的css异步加载 -->
+    <style>
+        :root{
+        /* 主色 */
+        --color-primary:#C41E3A;
+        --color-secondary:#FFD700;
+        --color-white:#FFFFFF;
+        /* 间距 */
+        --spacing-xs:0.25rem;
+        --spacing-sm:0.5rem; 
+        --spacing-md:1rem;    
+        /* 圆角 */
+        --radius-md:8px;
+        --radius-full:9999px;
+        /* 安全区 */
+        --safe-area-top:env(safe-area-inset-top,0);
+        }
+
+        /* ---- 基础reset ---- */
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        img{max-width:100%;display:block}
+
+        /* ---- Header ---- */
+        .header{
+        position:sticky;
+        top:0;
+        z-index:100;
+        background:var(--color-primary); /* !CRITICAL: 把渐变bg换成纯色，避免linear-gradient阻塞 */
+        padding-top:var(--safe-area-top);
+        /* !CRITICAL: 删除 box-shadow，非首屏关键 */
+        }
+        .header-content{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:var(--spacing-sm);
+        padding:var(--spacing-md);
+        position:relative;
+        }
+        .logo{
+        width:44px;
+        height:44px;
+        border-radius:var(--radius-md);
+        /* !CRITICAL: 删除 box-shadow 与动画，减少重绘 */
+        }
+        .header-title{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        color:var(--color-white);
+        }
+        .title-year{
+        font-size:10px; /* !CRITICAL: 直接用px值，避免var(--font-size-xs)未定义 */
+        color:var(--color-secondary);
+        }
+        .title-main{
+        font-size:20px; /* !CRITICAL: 简化成固定值，删除gradient/text-shadow */
+        font-weight:700;
+        }
+        .header-badge{
+        position:absolute;
+        right:var(--spacing-md);
+        background:var(--color-secondary);
+        color:#8B0000; /* !CRITICAL: 直接用色值，避免var(--color-primary-dark) */
+        font-size:11px;
+        font-weight:700;
+        padding:var(--spacing-xs) var(--spacing-sm);
+        border-radius:var(--radius-full);
+        /* !CRITICAL: 删除动画 badgePulse */
+        }
+
+        /* ---- Hero Banner ---- */
+        .hero-section{
+        position:relative;
+        background:var(--color-primary);
+        }
+        .hero-banner{
+        position:relative;
+        overflow:hidden;
+        }
+        .banner-slider{
+        position:relative;
+        width:100%;
+        aspect-ratio:375/200;
+        }
+        .banner-slide{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        opacity:0;
+        /* !CRITICAL: 删除 transition，减少首帧计算 */
+        }
+        .banner-slide.active{opacity:1}
+        .banner-image{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        }
+        .banner-indicators{
+        position:absolute;
+        bottom:var(--spacing-md);
+        left:50%;
+        transform:translateX(-50%);
+        display:flex;
+        gap:var(--spacing-sm);
+        }
+        .indicator{
+        width:8px;
+        height:8px;
+        border-radius:var(--radius-full);
+        background:rgba(255,255,255,.5);
+        /* !CRITICAL: 删除 transition */
+        }
+        .indicator.active{
+        width:24px;
+        background:var(--color-secondary);
+        }
+        /* !CRITICAL: 整个 .banner-decoration 及 @keyframes floatBounce 删除，属于装饰性元素 */
+    </style>
+    <link 
+        rel="preload" 
+        as="image" 
+        href="./assets/images/banner-01-640.avif" 
+        fetchpriority="high"
+    >
+    <link rel="stylesheet" href="./assets/css/style.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <img 
+                src="./assets/images/logo.avif"
+                alt="年货节Logo" 
+                class="logo"
+                width="44"
+                height="44"
+                loading="lazy"
+            >
+            <h1 class="header-title">
+                <span class="title-year">2026</span>
+                <span class="title-main">年货节</span>
+            </h1>
+            <div class="header-badge">热卖中</div>
+        </div>
+    </header>
+
+    <main id="main-content" role="main">
+        <!-- Hero Banner Section -->
+        <section class="hero-section" aria-labelledby="hero-title">
+            <h2 id="hero-title" class="visually-hidden">促销活动轮播</h2>
+            <div class="hero-banner">
+                <div class="banner-slider" role="region" aria-label="轮播图">
+                    <!-- 第一张图：LCP 核心优化 -->
+                    <div class="banner-slide active">
+                        <picture>
+                            <source srcset="./assets/images/banner-01-375.avif" media="(max-width: 480px)" type="image/avif">
+                            <source srcset="./assets/images/banner-01-640.avif" type="image/avif">
+                            <img 
+                                src="./assets/images/banner-01-640.avif" 
+                                alt="年货大促活动：满300减50" 
+                                class="banner-image"
+                                width="375px"
+                                height="164px"
+                                fetchpriority="high"
+                            >
+                        </picture>
+                    </div>
+                    <!-- 第二三张图：懒加载 -->
+                    <div class="banner-slide">
+                        <picture>
+                            <source srcset="./assets/images/banner-02-375.avif" media="(max-width: 480px)" type="image/avif">
+                            <source srcset="./assets/images/banner-02-640.avif" type="image/avif">
+                            <img 
+                                src="./assets/images/banner-02-640.avif" 
+                                alt="新春特惠限时抢购活动" 
+                                class="banner-image"
+                                width="375px"
+                                height="164px"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </picture>
+                    </div>
+                    <div class="banner-slide">
+                        <picture>
+                            <source srcset="./assets/images/banner-03-375.avif" media="(max-width: 480px)" type="image/avif">
+                            <source srcset="./assets/images/banner-03-640.avif" type="image/avif">
+                            <img 
+                                src="./assets/images/banner-03-640.avif" 
+                                alt="年货礼盒送礼首选" 
+                                class="banner-image"
+                                width="375px"
+                                height="164px"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </picture>
+                    </div>
+                </div>
+                <!-- Banner Indicators -->
+                <div class="banner-indicators" role="tablist" aria-label="轮播指示器">
+                    <button 
+                        class="indicator active" 
+                        role="tab" 
+                        aria-selected="true" 
+                        aria-label="第1张图片"
+                        data-index="0"
+                    ></button>
+                    <button 
+                        class="indicator" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-label="第2张图片"
+                        data-index="1"
+                    ></button>
+                    <button 
+                        class="indicator" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-label="第3张图片"
+                        data-index="2"
+                    ></button>
+                </div>
+                <!-- Decorative Elements -->
+                <div class="banner-decoration banner-decoration--left" aria-hidden="true">🧧</div>
+                <div class="banner-decoration banner-decoration--right" aria-hidden="true">🎊</div>
+            </div>
+        </section>
+
+        <!-- Countdown Section -->
+        <section class="countdown-section" aria-labelledby="countdown-title">
+            <div class="countdown-wrapper">
+                <div class="countdown-header">
+                    <span class="countdown-icon" aria-hidden="true">🎆</span>
+                    <h2 id="countdown-title" class="countdown-title">距离春节还有</h2>
+                    <span class="countdown-icon" aria-hidden="true">🎆</span>
+                </div>
+                
+                <div class="countdown-timer" role="timer" aria-live="polite" aria-atomic="true">
+                    <div class="countdown-item">
+                        <time class="countdown-value" id="countdown-days" datetime="P0D">00</time>
+                        <span class="countdown-label">天</span>
+                    </div>
+                    <span class="countdown-separator" aria-hidden="true">:</span>
+                    <div class="countdown-item">
+                        <time class="countdown-value" id="countdown-hours" datetime="PT0H">00</time>
+                        <span class="countdown-label">时</span>
+                    </div>
+                    <span class="countdown-separator" aria-hidden="true">:</span>
+                    <div class="countdown-item">
+                        <time class="countdown-value" id="countdown-minutes" datetime="PT0M">00</time>
+                        <span class="countdown-label">分</span>
+                    </div>
+                    <span class="countdown-separator" aria-hidden="true">:</span>
+                    <div class="countdown-item">
+                        <time class="countdown-value" id="countdown-seconds" datetime="PT0S">00</time>
+                        <span class="countdown-label">秒</span>
+                    </div>
+                </div>
+                
+                <p class="countdown-date" id="spring-festival-date">2026年2月17日 春节</p>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products-section" aria-labelledby="products-title">
+            <header class="section-header">
+                <h2 id="products-title" class="section-title">
+                    <span class="title-decoration" aria-hidden="true">✦</span>
+                    新春特惠好物
+                    <span class="title-decoration" aria-hidden="true">✦</span>
+                </h2>
+                <p class="section-subtitle">精选年货，品质保证</p>
+            </header>
+
+            <div class="products-grid" role="list">
+                <!-- Product Card 1 -->
+                <article class="product-card" role="listitem">
+                    <div class="product-badge">热卖</div>
+                    <figure class="product-image-wrapper">
+                        <img 
+                            src="./assets/images/product-nut.png" 
+                            alt="新春坚果礼盒套装" 
+                            class="product-image"
+                            loading="lazy"
+                            decoding="async"
+                            width="160"
+                            height="160"
+                        >
+                    </figure>
+                    <div class="product-info">
+                        <h3 class="product-name">新春坚果礼盒套装</h3>
+                        <p class="product-desc">精选6种坚果，送礼佳品</p>
+                        <div class="product-price">
+                            <span class="price-current">¥<strong>128</strong></span>
+                            <span class="price-original">¥199</span>
+                        </div>
+                        <button class="product-btn" type="button" aria-label="立即购买新春坚果礼盒套装">
+                            立即抢购
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Product Card 2 -->
+                <article class="product-card" role="listitem">
+                    <div class="product-badge product-badge--new">新品</div>
+                    <figure class="product-image-wrapper">
+                        <img 
+                            src="./assets/images/prodauct-tea.avif" 
+                            alt="龙井茶叶礼盒" 
+                            class="product-image"
+                            loading="lazy"
+                            decoding="async"
+                            width="160"
+                            height="160"
+                        >
+                    </figure>
+                    <div class="product-info">
+                        <h3 class="product-name">明前龙井茶叶礼盒</h3>
+                        <p class="product-desc">正宗西湖龙井，香气清雅</p>
+                        <div class="product-price">
+                            <span class="price-current">¥<strong>268</strong></span>
+                            <span class="price-original">¥388</span>
+                        </div>
+                        <button class="product-btn" type="button" aria-label="立即购买明前龙井茶叶礼盒">
+                            立即抢购
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Product Card 3 -->
+                <article class="product-card" role="listitem">
+                    <div class="product-badge product-badge--limit">限量</div>
+                    <figure class="product-image-wrapper">
+                        <img 
+                            src="./assets/images/product-candy.png" 
+                            alt="传统糖果年货大礼包" 
+                            class="product-image"
+                            loading="lazy"
+                            decoding="async"
+                            width="160"
+                            height="160"
+                        >
+                    </figure>
+                    <div class="product-info">
+                        <h3 class="product-name">传统糖果年货大礼包</h3>
+                        <p class="product-desc">多种口味，甜蜜过年</p>
+                        <div class="product-price">
+                            <span class="price-current">¥<strong>68</strong></span>
+                            <span class="price-original">¥99</span>
+                        </div>
+                        <button class="product-btn" type="button" aria-label="立即购买传统糖果年货大礼包">
+                            立即抢购
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Product Card 4 -->
+                <article class="product-card" role="listitem">
+                    <div class="product-badge">热卖</div>
+                    <figure class="product-image-wrapper">
+                        <img 
+                            src="./assets/images/product-sau.avif" 
+                            alt="广式腊味礼盒装" 
+                            class="product-image"
+                            loading="lazy"
+                            decoding="async"
+                            width="160"
+                            height="160"
+                        >
+                    </figure>
+                    <div class="product-info">
+                        <h3 class="product-name">广式腊味礼盒装</h3>
+                        <p class="product-desc">传统工艺，腊肠腊肉组合</p>
+                        <div class="product-price">
+                            <span class="price-current">¥<strong>188</strong></span>
+                            <span class="price-original">¥258</span>
+                        </div>
+                        <button class="product-btn" type="button" aria-label="立即购买广式腊味礼盒装">
+                            立即抢购
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Product Card 5 -->
+                <article class="product-card" role="listitem">
+                    <div class="product-badge product-badge--new">新品</div>
+                    <figure class="product-image-wrapper">
+                        <img 
+                            src="./assets/images/product-wine.png" 
+                            alt="法国进口红酒礼盒" 
+                            class="product-image"
+                            loading="lazy"
+                            decoding="async"
+                            width="160"
+                            height="160"
+                        >
+                    </figure>
+                    <div class="product-info">
+                        <h3 class="product-name">法国进口红酒礼盒</h3>
+                        <p class="product-desc">原瓶进口，双支装</p>
+                        <div class="product-price">
+                            <span class="price-current">¥<strong>328</strong></span>
+                            <span class="price-original">¥499</span>
+                        </div>
+                        <button class="product-btn" type="button" aria-label="立即购买法国进口红酒礼盒">
+                            立即抢购
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Product Card 6 -->
+                <article class="product-card" role="listitem">
+                    <div class="product-badge product-badge--limit">秒杀</div>
+                    <figure class="product-image-wrapper">
+                        <img 
+                            src="./assets/images/product-cookie.png" 
+                            alt="丹麦曲奇饼干礼盒" 
+                            class="product-image"
+                            loading="lazy"
+                            decoding="async"
+                            width="160"
+                            height="160"
+                        >
+                    </figure>
+                    <div class="product-info">
+                        <h3 class="product-name">丹麦曲奇饼干礼盒</h3>
+                        <p class="product-desc">进口原料，香酥可口</p>
+                        <div class="product-price">
+                            <span class="price-current">¥<strong>88</strong></span>
+                            <span class="price-original">¥128</span>
+                        </div>
+                        <button class="product-btn" type="button" aria-label="立即购买丹麦曲奇饼干礼盒">
+                            立即抢购
+                        </button>
+                    </div>
+                </article>
+            </div>
+
+            <!-- View More Button -->
+            <div class="view-more-wrapper">
+                <button class="view-more-btn" type="button">
+                    查看更多年货
+                    <span class="btn-arrow" aria-hidden="true">→</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section" aria-labelledby="benefits-title">
+            <h2 id="benefits-title" class="visually-hidden">购物保障</h2>
+            <ul class="benefits-list" role="list">
+                <li class="benefit-item" role="listitem">
+                    <span class="benefit-icon" aria-hidden="true">🚚</span>
+                    <span class="benefit-text">全国包邮</span>
+                </li>
+                <li class="benefit-item" role="listitem">
+                    <span class="benefit-icon" aria-hidden="true">✅</span>
+                    <span class="benefit-text">正品保障</span>
+                </li>
+                <li class="benefit-item" role="listitem">
+                    <span class="benefit-icon" aria-hidden="true">🔄</span>
+                    <span class="benefit-text">7天退换</span>
+                </li>
+                <li class="benefit-item" role="listitem">
+                    <span class="benefit-icon" aria-hidden="true">💬</span>
+                    <span class="benefit-text">极速客服</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img 
+                    src="./assets/images/logo.avif" 
+                    alt="年货节" 
+                    class="footer-logo"
+                    width="32"
+                    height="32"
+                >
+                <span class="footer-brand-text">年货节</span>
+            </div>
+            <nav class="footer-nav" aria-label="页脚导航">
+                <a href="#" class="footer-link">关于我们</a>
+                <a href="#" class="footer-link">联系客服</a>
+                <a href="#" class="footer-link">配送说明</a>
+                <a href="#" class="footer-link">退换政策</a>
+            </nav>
+            <div class="footer-social" aria-label="社交媒体">
+                <a href="#" class="social-link" aria-label="微信">
+                    <span aria-hidden="true">💬</span>
+                </a>
+                <a href="#" class="social-link" aria-label="微博">
+                    <span aria-hidden="true">📱</span>
+                </a>
+                <a href="#" class="social-link" aria-label="抖音">
+                    <span aria-hidden="true">🎵</span>
+                </a>
+            </div>
+            <p class="footer-copyright">
+                <small>&copy; 2026 年货节. 新春快乐，万事如意 🧧</small>
+            </p>
+        </div>
+        <div class="footer-decoration" aria-hidden="true">
+            <span>🏮</span>
+            <span>🧧</span>
+            <span>🎊</span>
+            <span>🏮</span>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button 
+        class="back-to-top" 
+        id="back-to-top" 
+        type="button" 
+        aria-label="返回顶部"
+        hidden
+    >
+        <span aria-hidden="true">↑</span>
+    </button>
+</body>
+</html>
